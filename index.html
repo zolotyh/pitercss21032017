@@ -27,7 +27,7 @@
     <div class="slides">
         <section>
             <h2>
-                Рефакторинг CSS
+                Рефакторинг стилей. Грабли и лопаты
             </h2>
             <p>
                 Алексей Золотых
@@ -67,54 +67,13 @@
         <section data-background-image="/img/3.gif" data-background-color="#322F26">
         </section>
         <section>
-            Если не наводить порядок в коде, то код будет запутываться
+            Если не наводить порядок, то код будет запутываться со временем
         </section>
         <section data-background-video="/img/3.mp4"></section>
         <section>
             <h2>Формально</h2>
             <b>Рефа́кторинг</b> &mdash; процесс изменения внутренней структуры программы, не затрагивающий её внешнего
             поведения и имеющий целью облегчить понимание её работы.
-        </section>
-        <section>
-            <h2>Две стороны одной медали</h2>
-            <aside class="notes">
-                <ol>
-                	<li>Рефакторнг как задача</li>
-                    <li>Рефакторинг как процесс</li>
-                </ol>
-                <p>Истина как всегд где-то посередине</p>
-            </aside>
-        </section>
-        <section>
-            <h2>Рефакторинг никогда не заканчивается</h2>
-        </section>
-        <section>
-            <h2>Чем чаще, тем меньше проблем</h2>
-            <ul>
-                <li class="fragment">Меньше изменений &mdash; меньше ошибок</li>
-                <li class="fragment">Вы всегда в контексте</li>
-                <li class="fragment">Отделу тестирования не нужно тратить много времени</li>
-                <li class="fragment">Начальство не заметит подвоха</li>
-            </ul>
-        </section>
-        <section>
-            <h2>Когда поздно пить Боржоми</h2>
-            <img src="img/borjomi_1.jpg" alt="">
-        </section>
-        <section id="smart">
-            <style>
-                #smart p {
-                    text-align: left;
-                }
-            </style>
-            <h2>
-                принцип <strike>КИДАО</strike> SMART
-            </h2>
-            <p>S &mdash; Specific (Конкретный)</p>
-            <p>M &mdash; Measurable (Измеримый)</p>
-            <p>A &mdash; Attainable, Achievable (Достижимый)</p>
-            <p>R &mdash; Relevant (Актуальный)</p>
-            <p>T &mdash; Time-bound (Ограниченный во времени)</p>
         </section>
         <section>
             <img alt="" src="/img/5.jpg"/>
@@ -145,12 +104,257 @@
             </ul>
         </section>
         <section>
-            <h2>CSS рефакторить сложно</h2>
+            <h2>Два подхода к рефакторингу</h2>
+            <ol>
+                <li class="fragment">Стили как текст</li>
+                <li class="fragment">Стили как код (семантически)</li>
+            </ol>
         </section>
         <section>
-            <h2>3 контекста плохо связанных между собой</h2>
+            <h2>Рефакторить стили семантически сложно</h2>
+        </section>
+        <section>
+            <h2>Основные причины</h2>
+            <ul>
+                <li>Минимум 3 контекста:<br>
+                    html, css, js <span class="fragment">, less, stylus, typescript, jade, jsx</span>
+                </li>
+                <li class="fragment">Контексты плохо связаны между собой</li>
+            </ul>
         </section>
         <section data-background-video="img/ide.mov"></section>
+        <section>
+            <h2>И это даже без javascript</h2>
+            <p class="fragment">Удобно добавлять префикс js- для классов, которые использует javascript</p>
+        </section>
+        <section>
+            <h2>Относитесь к стилям как к тексту</h2>
+        </section>
+        <section>
+            <h2>Поиск, консоль и регулярные выражения</h2>
+            <ul>
+                <li class="fragment">Работа с путями</li>
+                <li class="fragment">Простые случаи с переименованиями</li>
+                <li class="fragment">Небольшие изменения</li>
+            </ul>
+        </section>
+        <section>
+            <h4>Поиск и замена в пути встроена в IDE</h4>
+            <img alt="" src="/img/10.png"/>
+        </section>
+        <section>
+            <h4>Поддержка регулярных выражений</h4>
+            <img alt="" src="/img/9.png"/>
+        </section>
+        <section>
+            <h3>Почти тоже самое, но из консоли:</h3>
+            <p>
+                awk, sed, rm, mv, touch, ag, grep, ack, cat, pbcopy, pbpaste, ripgrep, yank...
+            </p>
+            <p class="fragment">Знать консольные команды просто необходимо</p>
+        </section>
+        <section>
+            <pre><code data-trim data-noescape>
+#!/bin/bash
+
+
+STATIC_HOST="http://example.com"
+sed -i '' "s|url(\([^)]*\)|url($STATIC_HOST\1|g" style.css
+                                                </code></pre>
+        </section>
+        <section>
+            <h2>Есть проблемы</h2>
+            <pre><code data-trim data-noescape>
+...
+background-image : url(/image/test.png);
+background-image : url("/image/test.png");
+background-image : url('/image/test.png');
+...
+                                                </code></pre>
+            <p class="fragment">
+                Нужно предусмотреть все варианты
+            </p>
+        </section>
+        <section>
+            <h2>Отладчик регулярных выражений</h2>
+            <img alt="" src="/img/11.png"/>
+        </section>
+        <section>
+            <img src="img/htmlreg.png" alt="">
+        </section>
+        <section>
+            <h2>
+                Используйте статические анализаторы
+                (CSSLint или встроенный в IDE)
+            </h2>
+            <p class="fragment">
+                Единообразный код проще рефакторить
+            </p>
+        </section>
+        <section data-background-image="img/errorscreen.png">
+        </section>
+        <section>
+            <h2>Встроенные средства для рефакторинга</h2>
+            <ul>
+                <li class="fragment">Переименование</li>
+                <li class="fragment">Перетаскивание мышкой файлов и папок</li>
+            </ul>
+        </section>
+        <section id="ide2" data-background-video="/img/ide2.mov"></section>
+        <section>
+            <p>
+                Хорошо для маленьких проектов
+            </p>
+        </section>
+        <section>
+            <p>
+                Чем круче ваша IDE, тем дольше ждать результата
+            </p>
+        </section>
+        <section id="ide3" data-background-video="/img/ide3.mov"></section>
+        <section>
+            <h2>Иногда, в бою, это почти всегда не работает</h2>
+        </section>
+        <section>
+            <h3>Браузер в любом случае читает&nbsp;CSS</h3>
+            <p class="fragment">
+                Можно использовать CSS как промежуточный формат для перевода между различными препроцессорами
+            </p>
+        </section>
+        <section>
+            <h2>
+                Рефакторинг на основе AST CSS
+            </h2>
+            <p class="fragment">(Абстрактное синтаксическое дерево)</p>
+        </section>
+        <section>
+            Абстрактное синтаксическое дерево (АСД) — в информатике конечное, помеченное, ориентированное дерево, в
+            котором внутренние вершины сопоставлены (помечены) с операторами языка программирования, а листья — с
+            соответствующими операндами.
+        </section>
+        <section>
+            <h2>POSTCSS + plugins</h2>
+            <ul>
+                <li class="fragment">Лишние цвета</li>
+                <li class="fragment">Дублирование стилей</li>
+                <li class="fragment">Ненужные префиксы</li>
+                <li class="fragment">Новые переменные</li>
+                <li class="fragment">Привести к единому стандарту</li>
+            </ul>
+        </section>
+        <section>
+            <p>
+                Для всего остального можно написать плагин
+            </p>
+        </section>
+        <section>
+            И вот мы разложили картинки, оптимизировали стили и уже готовы к мерджу...
+        </section>
+        <section data-background-video="/img/panic.mp4"></section>
+        <section>
+            <p>Помните, добрые менеджеры из соседнего отдела не дают вашим  коллегам спать</p>
+             <img src="img/cruel.jpg" alt="">
+        </section>
+        <section>
+            <h2>Мердж изменений &mdash; очень больно</h2>
+        </section>
+        <section>
+            <h3>
+                А что если написать сценарий рефакторинга и применять его автоматически
+            </h3>
+            <p class="fragment">
+                Gulp, Make, Bash
+            </p>
+        </section>
+        <section>
+            <h2>Gulp</h2>
+            <pre class="fragment"><code data-trim data-noescape>
+gulp.task('refactor', function () {
+    return gulp.src('folder/**/*.js') // Нужные файлы для рефакторинга
+        .pipe(RefactoringPlugin()) // Рефакторим код
+        .pipe(gulp.dest('./')) // Кладем на место
+})
+                                                </code></pre>
+        </section>
+        <section>
+            <p>
+                Если что-то пошло не так, то
+            <pre class="fragment"><code data-trim data-noescape>
+$ git reset --hard
+$ git merge origin/master
+# Правим код миграции
+$ gulp refactor
+                                                </code></pre>
+        </p>
+    </section>
+        <section data-background-video="/img/panic.mp4"></section>
+        <section>
+            <h2>Баги не всегда очевидны</h2>
+        </section>
+        <section>
+                <img src="img/sc1.png" alt="">
+        </section>
+        <section>
+                <img src="img/sc2.png" alt="">
+        </section>
+        <section>
+                <img src="img/result.png" alt="">
+        </section>
+        <section>
+            <h2>А вы вообще уверены что это баг?!</h2>
+        </section>
+        <section>
+        <p>Или жестокие игры PM из соседней команды...</p>
+             <img src="img/cruel.jpg" alt="">
+        </section>
+        <section>
+            <blockquote>
+                <p>
+                “Красный цвет побуждает к действию” 
+                </p>
+            </blockquote>
+        </section>
+        <section>
+            <h4>Рефакторинг, это процесс или задача?</h4>
+            <aside class="notes">
+                <ol>
+                	<li>Рефакторинг как задача</li>
+                    <li>Рефакторинг как процесс</li>
+                </ol>
+                <p>Истина как всегда где-то посередине</p>
+            </aside>
+        </section>
+        <section>
+            <h2>Рефакторинг никогда не заканчивается</h2>
+        </section>
+        <section>
+            <h2>Чем чаще, тем меньше проблем</h2>
+            <ul>
+                <li class="fragment">Меньше изменений &mdash; меньше ошибок</li>
+                <li class="fragment">Вы всегда в контексте</li>
+                <li class="fragment">Отделу тестирования не нужно тратить много времени</li>
+                <li class="fragment">Начальство не заметит подвоха</li>
+            </ul>
+        </section>
+        <section>
+            <h2>Рефакторинг, когда поздно пить Боржоми &mdash; это уже задача</h2>
+            <img src="img/borjomi_1.jpg" alt="">
+        </section>
+        <section id="smart">
+            <style>
+                #smart p {
+                    text-align: left;
+                }
+            </style>
+            <h2>
+                принцип <strike>КИДАО</strike> SMART
+            </h2>
+            <p>S &mdash; Specific (Конкретный)</p>
+            <p>M &mdash; Measurable (Измеримый)</p>
+            <p>A &mdash; Attainable, Achievable (Достижимый)</p>
+            <p>R &mdash; Relevant (Актуальный)</p>
+            <p>T &mdash; Time-bound (Ограниченный во времени)</p>
+        </section>
         <section>
             <h2>Настроить процесс важнее</h2>
          </section>
@@ -204,7 +408,7 @@
         <section id="tourist-fail" data-background-video="/img/4.mp4">
             <style>
                 #tourist-fail p {
-                    background: rgba(255, 255, 255, 0.6);
+                    background: rgba(255, 255, 255, 0.9);
                     padding: 1em;
                 }
             </style>
@@ -215,227 +419,19 @@
             <p class="fragment">
                 &mdash; Нужен коммит
             </p>
-            <aside class="notes">
-                А что если постепенный рефакторинг не помогает
-            </aside>
         </section>
         <section>
-            <h2>Что еще?</h2>
+            <p>Хорошо бы заручиться поддержкой руководства</p>
+        </section>
+        <section>
+            <h2>Что еще</h2>
             <ul>
-                <li class="fragment">Переписывание по частям</li>
-                <li class="fragment">Переписывание приложения полностью</li>
+                <li class="fragment">Приложение ожидает редизайн, и новые стили можно писать лучше</li>
+                <li class="fragment">Можно постепенно вводить BEM или другую методологию</li>
+                <li class="fragment">Лично мы используем эмуляцию изоляции стилей из angular и стараемся не трогать
+                legacy</li>
             </ul>
         </section>
-        <section>
-            <h2>Два подхода к рефакторингу</h2>
-            <ol>
-                <li class="fragment">Код как текст</li>
-                <li class="fragment">Код как код</li>
-            </ol>
-        </section>
-        <section>
-            <h2>Поиск, консоль и регулярные выражения</h2>
-            <ul>
-                <li class="fragment">Работа с путями</li>
-                <li class="fragment">Работа со стилями</li>
-                <li class="fragment">Небольшие изменения в коде</li>
-            </ul>
-        </section>
-        <section>
-            <h2>Поиск и замена в IDE</h2>
-            <img alt="" src="/img/10.png"/>
-        </section>
-        <section>
-            <h2>Поиск и замена в IDE</h2>
-            <img alt="" src="/img/9.png"/>
-        </section>
-        <section>
-            <h2>Консоль</h2>
-            <p>
-                awk, sed, rm, mv, touch, ag, grep, ack, cat, pbcopy, pbpaste...
-            </p>
-            <pre><code data-trim data-noescape>
-#!/bin/bash
-
-
-STATIC_HOST="http://example.com"
-sed -i '' "s|url(\([^)]*\)|url($STATIC_HOST\1|g" style.css
-                                                </code></pre>
-        </section>
-        <section>
-            <h2>Есть проблемы</h2>
-            <pre><code data-trim data-noescape>
-...
-background-image : url(/image/test.png);
-background-image : url("/image/test.png");
-background-image : url('/image/test.png');
-...
-                                                </code></pre>
-            <p class="fragment">
-                Нужно предусмотреть все варианты
-            </p>
-        </section>
-        <section>
-            <h2>
-                Используйте статические анализаторы
-            </h2>
-            <p class="fragment">
-                Единообразный код проще рефакторить
-            </p>
-            <p class="fragment">
-                eslint, jshint, csslint и еще много много других
-            </p>
-        </section>
-        <section>
-            <h2>Отладчик регулярных выражений</h2>
-            <img alt="" src="/img/11.png"/>
-        </section>
-        <section>
-            <h2>Встроенные средства для рефакторинга</h2>
-            <ul>
-                <li class="fragment">Переименование</li>
-                <li class="fragment">Перетаскивание мышкой файлов и папок</li>
-                <li class="fragment">Выделение методов</li>
-            </ul>
-            <p class="fragment">
-                Чем круче ваша IDE, тем дольше ждать результата
-            </p>
-        </section>
-        <section>
-            <h2>
-                Рефакторинг на основе AST
-            </h2>
-            <p class="fragment">(Абстрактное синтаксическое дерево)</p>
-        </section>
-        <section>
-            Абстрактное синтаксическое дерево (АСД) — в информатике конечное, помеченное, ориентированное дерево, в
-            котором внутренние вершины сопоставлены (помечены) с операторами языка программирования, а листья — с
-            соответствующими операндами.
-        </section>
-        <section>
-            <h2>grasp</h2>
-            <p>
-                npm install -g grasp
-            </p>
-            <p>
-                <a href="http://www.graspjs.com/">http://www.graspjs.com/</a>
-            </p>
-        </section>
-        <section>
-            <h3>
-                CSS подобный синтаксис
-            </h3>
-            <pre class="fragment"><code data-trim data-noescape>
-$ grasp 'if.test[op=&&]' a.js
-
-    2:   if (x && f(x)) { return x; }
-    5:   if (xs.length && ys.length) {
-    10:  if (x == 3 && list[x]) {
-                                                </code></pre>
-            <h3 class="fragment">
-                Поиск по шаблонам
-            </h3>
-            <pre class="fragment"><code data-trim data-noescape>
-$ grasp -e 'return __ + __' b.js
-
-    3:  if (x < 2) { return x + 2; }
-                                 13:      return '>>' + str.slice(2);
-                                 15:  return f(z) + x;
-                                                </code></pre>
-        </section>
-        <section>
-            <h2>Рефакторинг</h2>
-            <pre class="fragment"><code data-trim data-noescape>
-$ cat c.js
-
-    f(x < y, x == z);
-
-                                 $ grasp bi --replace '{{.r}}+{{.l}}' c.js
-
-                                 f(y+x, z+x);
-                                                </code></pre>
-            <p class="fragment">
-                Есть API
-            </p>
-            <pre class="fragment"><code data-trim data-noescape>
-var grasp = require('grasp');
-
-var replacer = grasp
-                            .replace('equery', '__ + __', '{{.l}} - {{.r}}');
-
-var processedCode = replacer(code);
-                                                </code></pre>
-
-        </section>
-        <section>
-            <h2>jscodeshift</h2>
-            <p>
-                jscodeshift is a toolkit for running codemods over multiple JS files.
-            </p>
-            <a href="https://github.com/facebook/jscodeshift">https://github.com/facebook/jscodeshift</a>
-        </section>
-        <section>
-            <h2>Codemods</h2>
-            <pre class="fragment"><code data-trim data-noescape>
-/**
- * This replaces every occurence of variable "foo".
- */
-module.exports = function(fileInfo, api) {
-    return api.jscodeshift(fileInfo.source)
-        .findVariableDeclarators('foo')
-        .renameTo('bar')
-        .toSource();
-}
-                                                </code></pre>
-        </section>
-        <section>
-            <h2>Готовый сборник рецептов</h2>
-            <p>
-                <a href="https://github.com/cpojer/js-codemo">https://github.com/cpojer/js-codemod</a>
-            </p>
-            <ul class="fragment">
-                <li>var в const или let.</li>
-                <li>Обратные вызовы в cтрелочные функции</li>
-                <li>Строки в шаблоны</li>
-            </ul>
-        </section>
-        <section>
-            Стили тоже можно рефакторить в AST режиме
-        </section>
-        <section>
-            <h2>POSTCSS + plugins</h2>
-            <ul>
-                <li class="fragment">Убрать дублирование стилей</li>
-                <li class="fragment">Уменьшить разброс цветов</li>
-                <li class="fragment">Убрать префиксы</li>
-                <li class="fragment">Выделить новые переменные</li>
-            </ul>
-        </section>
-        <section data-background-video="/img/panic.mp4"></section>
-        <section>
-            <h2>Мердж изменений &mdash; очень больно</h2>
-        </section>
-        <section>
-            <h2>Gulp</h2>
-            <pre class="fragment"><code data-trim data-noescape>
-gulp.task('refactor', function () {
-    return gulp.src('folder/**/*.js') // Нужные файлы для рефакторинга
-        .pipe(RefactoringPlugin()) // Рефакторим код
-        .pipe(gulp.dest('./')) // Кладем на место
-})
-                                                </code></pre>
-        </section>
-        <section>
-            <p>
-                Если что-то пошло не так, то
-            <pre class="fragment"><code data-trim data-noescape>
-$ git reset --hard
-$ git merge origin/master
-# Правим код миграции
-$ gulp refactor
-                                                </code></pre>
-        </p>
-    </section>
     <section data-background-video="/img/haha.mp4"></section>
     <section>
         Спасибо за внимание!
